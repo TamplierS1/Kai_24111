@@ -5,25 +5,26 @@ import string
 
 
 def main() -> None:
-    length = -1
-    while length == -1:
-        try:
-            length = int(input("Длина пароля: "))
-        except ValueError:
-            print("Длина пароля должна быть целым числом! Попробуйте еще раз")
-
     symbol_types = [string.ascii_lowercase]
     alphabet = string.ascii_lowercase
     print("Какие символы использовать при генерации пароля?")
-    if input("Заглавные буквы? Y/N: ") == "Y":
+    if input("Заглавные буквы? y/n: ") == "y":
         symbol_types.append(string.ascii_uppercase)
         alphabet += string.ascii_uppercase
-    if input("Цифры? Y/N: ") == "Y":
+    if input("Цифры? y/n: ") == "y":
         symbol_types.append(string.digits)
         alphabet += string.digits
-    if input("Специальные символы? Y/N: ") == "Y":
+    if input("Специальные символы? y/n: ") == "y":
         symbol_types.append(string.punctuation)
         alphabet += string.punctuation
+
+    length = 0
+    min_length = len(symbol_types)
+    while length < min_length:
+        try:
+            length = int(input(f"Длина пароля (минимум {min_length} символов): "))
+        except ValueError:
+            print("Длина пароля должна быть целым числом! Попробуйте еще раз")
 
     password = ""
     while True:
@@ -37,6 +38,8 @@ def main() -> None:
 
         if success:
             break
+        else:
+            password = ""
 
     print(f"Сгенерированый пароль: {password}")
 
