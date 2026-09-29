@@ -1,0 +1,32 @@
+[project]
+name = "weatherbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "tamplierS1", email = "azamat.nabiullin.97@mail.ru" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "aiogram>=3.31.0",
+    "python-dotenv>=1.2.3",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+weatherbot = "weatherbot:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyrefly>=1.3.2",
+    "ruff>=0.16.9",
+]
+
+[tool.pyrefly.errors]
+unknown-name = false
+missing-import = false
+parse-error = false
