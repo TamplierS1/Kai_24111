@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+import argparse
+import random
+
+char_types = {
+    "upper_case_letter": "upper_case",
+    "lower_case_letter": "lower_case",
+    "special_char": "special_char",
+    "number": "number"
+}
+
+special_chars = (
+    "!", "#", "$", "%", "&", "(", ")", "*", "+", ",", 
+    "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", 
+    "[", "\\", "]", "^", "_", "{", "|", "}", "~"
+)
+
+
+def get_rand_sym(char_type: str) -> str:
+    if char_type == char_types["upper_case_letter"]:
+        return chr(random.randint(65, 90))
+    elif char_type == char_types["lower_case_letter"]:
+        return chr(random.randint(97, 122))
+    elif char_type == char_types["special_char"]:
+        return random.choice(special_chars)
+    elif char_type == char_types["number"]:
+        return str(random.randint(0, 9))
+
+
+def describe_sym(char: str) -> str:
+    if 65 <= ord(char) <= 90:
+        return char_types["upper_case_letter"]
+    if 97 <= ord(char) <= 122:
+        return char_types["lower_case_letter"]
+    if 48 <= ord(char) <= 57:
+        return char_types["number"]
+    else:
+        return char_types["special_char"]
+
+
+def create_passwd(length: int) -> str:
+    res = list()
+    for _ in range(length):
+        param = random.choice((
+            char_types["lower_case_letter"], 
+            char_types["special_char"], 
+            char_types["upper_case_letter"],
+            char_types["number"]
+        ))
+        char = get_rand_sym(param)
+        res.append(char)
+    return "".join(res)
+
+
+def correct_passwd(passwd: str) -> str:
+    if len(passwd) < 4:
+        return passwd
+    
+    cpy_passwd = list(passwd) 
+    
+    while True:
+        counts = {
+            char_types["upper_case_letter"]: 0,
+            char_types["lower_case_letter"]: 0,
+            char_types["special_char"]: 0,
+            char_types["number"]: 0
+        }
+        
+        for i in cpy_passwd:
+            counts[describe_sym(i)] += 1
+                
+        if counts[char_types["upper_case_letter"]] > 0 and \
+           counts[char_types["lower_case_letter"]] > 0 and \
+           counts[char_types["special_char"]] > 0 and \
+           counts[char_types["number"]] > 0:
+            return "".join(cpy_passwd)
+        
+        missing_type = None
+        for t, count in counts.items():
+            if count == 0:
+                missing_type = t
+                break
+                
+        biggest_type = max(counts, key=counts.get)
+        
+        for idx, char in enumerate(cpy_passwd):
+            if describe_sym(char) == biggest_type:
+                cpy_passwd[idx] = get_rand_sym(missing_type)
+                break
+
+
+def get_passwd(length: int, raw: bool = False) -> str:
+    res = create_passwd(length)
+    if not raw:
+        res = correct_passwd(res)
+    return res
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Утилита генерации надежных паролей kh_passwd")
+    parser.add_argument("-n", type=int, default=12, help="Длина генерируемого пароля (по умолчанию: 12)")
+    parser.add_argument("--raw", action="store_true", help="Отключить умную корректировку пароля")
+    
+    args = parser.parse_args()
+    print(get_passwd(length=args.n, raw=args.raw))
+
+
+if __name__ == "__main__":
+    main()
