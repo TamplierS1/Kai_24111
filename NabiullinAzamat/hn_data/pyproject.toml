@@ -1,0 +1,32 @@
+[project]
+name = "hn-data"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "tamplierS1", email = "azamat.nabiullin.97@mail.ru" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "pandas[output-formatting,parquet,performance,plot]>=3.0.6",
+]
+
+[project.scripts]
+hn-data = "hn_data:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.pyrefly.errors]
+unknown-name = false
+missing-import = false
+parse-error = false
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4.0",
+]
